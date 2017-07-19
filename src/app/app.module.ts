@@ -6,10 +6,16 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material'
 
+// Firebase
+import { AngularFireModule } from 'angularfire2'
+import { environment } from 'environments/environment'
+
+// UNC CS Planner Services
 import { PostService } from './services/post.service'
 import { CommentService } from './services/comment.service'
 import { UserContextService } from './services/user-context.service'
 
+// Components
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component'
 import { AppRoutingModule } from './app-routing.module';
@@ -54,12 +60,13 @@ import { PostPagerComponent } from './post-pager/post-pager.component';
     PostPagerComponent,
   ],
   imports: [
-    MaterialModule,
+    AppRoutingModule,
+    AngularFireModule.initializeApp(environment.firebase),
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule
+    MaterialModule,
   ],
   providers: [ PostService, UserContextService ],
   bootstrap: [ AppComponent ]

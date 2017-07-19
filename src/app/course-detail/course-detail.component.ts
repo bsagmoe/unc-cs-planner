@@ -1,6 +1,6 @@
 import { Input, Component, OnInit, OnChanges, SimpleChanges, DoCheck } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router'
-
+import 'rxjs/add/operator/switchMap'
 
 import { CourseService } from '../services/course.service'
 import { PostService } from '../services/post.service'
@@ -113,7 +113,6 @@ export class CourseDetailComponent implements OnInit {
   updatePlanner(status: PlannerStatus, shouldToggle: boolean){
 
     // If the button being clicked is the same one as is already active, we should remove the course from the planner
-    console.log(status + " - " + shouldToggle)
     status = shouldToggle ? 'none' : status
 
     this.userService.updateUserCourses(this.course._id, status)
