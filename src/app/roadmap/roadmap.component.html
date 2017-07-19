@@ -1,0 +1,84 @@
+<div class="container">
+
+  <div class="row">
+    <h2 id="first-header">Options</h2>
+  </div>
+
+  <!-- The row of options -->
+  <div class="row btn-toolbar" id="options-bar">
+    <div class="btn-group" role="group">
+      <button type="button" class="btn btn-default" [ngClass]="{active: coursePlan === 'minor'}" (click)="setCoursePlan('minor')">Minor</button>
+      <button type="button" class="btn btn-default" [ngClass]="{active: coursePlan === 'ba'}" (click)="setCoursePlan('ba')">BA</button>
+      <button type="button" class="btn btn-default" [ngClass]="{active: coursePlan === 'bs'}" (click)="setCoursePlan('bs')">BS</button>
+    </div>
+
+    <button type="button" class="btn btn-default" [ngClass]="{active: hideInfrequent === true}" (click)="toggleHideInfrequent()">
+      <span [ngSwitch]="hideInfrequent">
+        <span *ngSwitchCase="false">
+          Hide
+        </span>
+        <span *ngSwitchCase="true">
+          Hiding
+        </span>
+      </span>
+      Classes offered Infrequently
+    </button>
+
+    <button type="button" class="btn btn-default" [ngClass]="{active: showOnlyUpcoming}" (click)="toggleShowOnlyUpcoming()">
+      <span [ngSwitch]="showOnlyUpcoming">
+        <span *ngSwitchCase="false">
+          Show
+        </span>
+        <span *ngSwitchCase="true">
+          Showing
+        </span>
+      </span>
+      Only {{currentSemester | titlecase }} {{ currentYear }} Classes
+    </button>
+
+    <button type="button" class="btn btn-default" [ngClass]="{active: showGradCourses}" (click)="toggleShowGradCourses()">
+      <span [ngSwitch]="showGradCourses">
+        <span *ngSwitchCase="false">
+          Show
+        </span>
+        <span *ngSwitchCase="true">
+          Showing
+        </span>
+      </span>
+      Grad Classes
+    </button>
+  </div>
+
+  <div class="row">
+    <h2>Core Requirements</h2>
+  </div>
+  <div class="row course-row">
+    <app-course-card class="col-md-3 col-xs-4"  *ngFor="let course of filteredCore"
+                     [routerLink]="['/courses', course.dept, course.number]" [course]="course"></app-course-card>
+  </div>
+
+  <div class="row" [ngSwitch]="coursePlan">
+    <h2>Additional CS Courses</h2>
+    <p class="additional-info" *ngSwitchCase="'minor'">Any two additional COMP courses 426 or greater excluding COMP 495, COMP 496, COMP 691H, and COMP 692H</p>
+    <p class="additional-info" *ngSwitchCase="'ba'">Six additional COMP courses numbered COMP 426 or higher (excluding courses for honors thesis, internships, independent study, and COMP 690)</p>
+    <p class="additional-info" *ngSwitchCase="'bs'">Five additional three-or-more credit hour COMP courses numbered 426 or higher (excluding courses for honors thesis, internships, independent study, and COMP 690).</p>
+  </div>
+
+  <div class="row course-row">
+    <app-course-card class="col-md-3 col-xs-4"  *ngFor="let course of filteredComp"
+                     [routerLink]="['/courses', course.dept, course.number]" [course]="course"></app-course-card>
+  </div>
+
+  <div *ngIf="coursePlan !== 'minor'">
+    <div class="row" [ngSwitch]="coursePlan">
+      <h2>Other Courses</h2>
+      <p class="additional-info" *ngSwitchCase="'ba'">COMP 283 OR MATH 381, STOR 155 OR 435</p>
+      <p class="additional-info" *ngSwitchCase="'bs'">COMP 283 OR MATH 381 and an additional science course (see <a href='https://advising.unc.edu/files/2012/11/CompSciBS-2013-2016.pdf'>major worksheet</a> for more details)</p>
+    </div>
+
+    <div class="row course-row">
+    <app-course-card class="col-md-3 col-xs-4"  *ngFor="let course of filteredOutside"
+                     [routerLink]="['/courses', course.dept, course.number]" [course]="course"></app-course-card>
+    </div>
+  </div>
+</div>

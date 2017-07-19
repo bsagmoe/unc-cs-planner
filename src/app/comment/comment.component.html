@@ -1,0 +1,39 @@
+<div [ngClass]="{'comment-bar': level > 0}" class="comment">
+  <!-- Display the user's full name (if provided) and the date of the post -->
+  <p class="comment-user"> 
+    <span *ngIf="!comment.user">[deleted]</span>
+    <a *ngIf="comment.user" [routerLink]="['/profile', comment.user?.username]">{{ userString }}</a> on {{ comment?.date | date }} at {{ comment?.date | date:'shortTime' }}
+    <a (click)="hideSelf = !hideSelf">
+      [<span *ngIf="hideSelf">+{{ getNumComments(comment) }}</span><span *ngIf="!hideSelf">-</span>]
+    </a>
+  </p>
+
+  <div [hidden]="hideSelf" class="comment-body">
+    <p style="white-space: pre-line" class="comment-text">{{ comment?.text }}</p>
+
+    <!-- All of the stuff that shows up below a comment -->
+    <p  class="comment-interaction">
+      <a *ngIf="userContextService.getCurrentUser()" (click)="makingReply = !makingReply">
+        <span *ngIf="!makingReply">Reply</span>
+        <span *ngIf="makingReply">Cancel reply</span>
+      </a>
+
+      <a *ngIf="makingReply" (click)="submitComment()">
+        Submit Reply
+      </a>
+    </p>
+
+    <!-- The reply form -->
+    <form *ngIf="makingReply" class="comment-reply">
+      <md-input-container>
+        <textarea mdTextareaAutosize mdInput rows="1" [(ngModel)]="text" name="text"></textarea>
+      </md-input-container>
+    </form>
+
+    <!-- Tree of subcomments -->
+    <div *ngIf="comment.comments?.length > 0">
+        <app-comment *ngFor="let comment of comment?.comments" [comment]="comment" [level]="level + 1" >
+        </app-comment>
+    </div>
+  </div>
+</div>

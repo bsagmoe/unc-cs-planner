@@ -1,0 +1,13 @@
+.pager-btn-group {
+    width: 100%;
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.pager-btn-position {
+    flex: 1;
+}
+
+.btn-icon {
+    padding-bottom: 0;
+}

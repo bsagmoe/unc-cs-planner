@@ -1,0 +1,47 @@
+<div *ngIf="course" class="container course-detail">
+  <div class="row">
+    <h1 class="col-xs-12">{{ course?.dept + " " + course?.number }}</h1>
+    <h2 class="col-xs-12"> {{ course?.title }} </h2>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <div *ngIf="userContextService.getCurrentUser()">
+        <h3>Add to planner</h3>
+        <div class="btn-group" role="group">
+          <button [class.active]="isPastCourse" class="btn btn-default" (click)="updatePlanner('past', isPastCourse)">Past</button>
+          <button [class.active]="isCurrentCourse" class="btn btn-default" (click)="updatePlanner('current', isCurrentCourse)">Current</button>
+          <button [class.active]="isFutureCourse" class="btn btn-default" (click)="updatePlanner('future', isFutureCourse)">Future</button>
+        </div>
+      </div>
+
+      <h3>From the Catalog</h3>
+      <p> <strong>Description:</strong> {{ course?.description }} </p>
+      <p> <strong>Credits:</strong> {{ course?.credit_hours }} </p>
+      <p> <strong>Catalog Entry:</strong> <a [href]="'http://catalog.unc.edu/search/?P=' + course?.dept + '+' + course?.number + course?.modifier">{{ course?.dept + " " + course?.number + course?.modifier }}</a></p>
+
+      <h3>From the Archives</h3>
+      <div *ngFor="let offering of course?.offerings">
+        <p> <strong> {{ offering?.semester | titlecase }} {{ offering?.year }} </strong> <br>
+          Instructor: {{ offering?.instructor }}
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12 col-xs-12">
+      <h3>From the Community</h3>
+      <app-post-pager [posts]="posts"></app-post-pager>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="!course" class="container">
+
+  <div *ngIf="!searchFinished">
+    <md-progress-bar></md-progress-bar>
+  </div>
+
+  <div *ngIf="searchFinished" class="row">
+    <h2 class="col-xs-12">The class you were looking for couldn't be found</h2>
+  </div>
+</div>

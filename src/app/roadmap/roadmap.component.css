@@ -1,0 +1,65 @@
+h2 {
+    background-color: #7BAFD4;
+    color: white;
+    padding: .25em .5em;
+    margin-bottom: 0; 
+    margin-top: -15px; 
+}
+
+a {
+    color: white;
+    text-decoration: underline;
+}
+
+app-course-card:focus {
+    outline: none;
+}
+
+#first-header {
+    margin-top: 15px; 
+}
+
+#options-bar {
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+
+.additional-info {
+    background-color: #5C839E;
+    color: white;
+    margin-top: 0; 
+    font-size: .75em;
+    padding: .5em 15px;
+}
+
+#roadmap {
+    display: flex;
+}
+
+#roadmap > div {
+    margin-top: 20px;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+#roadmap > app-course-detail {
+    padding: 0 20px;
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.course-row {
+    margin: 15px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.course-row-flex-start {
+        justify-content: flex-start;
+}
+
+@media(max-width: 768px) {
+    #roadmap {
+        flex-direction: column-reverse;
+    }
+}

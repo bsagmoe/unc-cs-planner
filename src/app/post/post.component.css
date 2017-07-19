@@ -1,0 +1,57 @@
+.post {
+    border: thin solid #5C839E;
+    margin-bottom: 30px;
+}
+
+.post-info {
+    background-color: #5C839E;
+    color: white;
+    padding: 1em;
+}
+
+.post-info a {
+    color: white;
+}
+
+.post-info-user {
+    font-size: 1.5em;
+}
+
+.post-text {
+    margin: 2em;
+    font-size: 1.1em;
+}
+
+.tag-chip {
+    margin-right: 5px;
+    color: white;
+    background-color: #7bafd4;
+    user-select: none;
+    padding: .3em .75em .2em .75em;
+    border-radius: .75em;
+    line-height: 1em;
+}
+
+.post-add-comment {
+    border-top: thin solid #5C839E;
+    padding: 1em 2em;
+}
+
+#comment-form {
+    display: flex;
+}
+
+md-input-container {
+    flex-grow: 1;
+}
+
+form textarea {
+    resize: vertical;
+}
+
+
+.post-comments {
+    border-top: thin solid #5C839E;
+    background-color: #eff5fa;
+    padding: 1em; 
+}

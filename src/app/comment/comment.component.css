@@ -1,0 +1,39 @@
+.comment {
+    padding-left: 1em; 
+}
+
+.comment-bar {
+    border-left: thin solid rgba(0, 0, 0, .2);
+}
+
+.comment-user {
+    opacity: .6;
+    transition: opacity .2s ease-in-out;
+
+    margin-bottom: 0;
+}
+
+.comment-user:hover {
+    opacity: 1;
+}
+
+.comment-text {
+    margin-bottom: 0;
+}
+
+.comment-reply {
+    margin-left: 1em;
+}
+
+.comment-reply md-input-container{
+   width: 100%;
+}
+
+.comment-reply md-input-container textarea {
+    resize: vertical;
+}
+
+.comment-interaction {
+    font-size: .75em;
+    text-transform: lowercase;
+}

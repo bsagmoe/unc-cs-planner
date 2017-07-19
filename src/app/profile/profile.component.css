@@ -1,0 +1,40 @@
+h2 {
+    line-height: .5em;
+}
+
+h3 {
+    background-color: #7BAFD4;
+    padding: .25em .5em;
+    color: white;
+}
+
+#name {
+    background-color: #5C839E;
+    color: white;
+    margin-top: 15px;
+}
+
+.overflow {
+    overflow-y: hidden;
+    overflow-x: scroll;
+
+    white-space: nowrap;
+    margin: 0;
+    height: 8.5em;
+}
+
+.card:first-of-type {
+    margin-left: .25em;
+}
+
+.card:last-of-type {
+    margin-right: .25em;
+}
+
+.card {
+    display: inline-block;
+    margin-top: .25em;
+    margin-left: .5em;
+    margin-right: .5em;
+    margin-bottom: -15px;
+}

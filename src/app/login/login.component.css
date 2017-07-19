@@ -1,0 +1,13 @@
+* {
+    font-family: 'Share Tech', sans-serif;
+}
+
+md-tab-group {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    display: block;
+    font-size: 1.25em;
+}

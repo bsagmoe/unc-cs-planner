@@ -1,0 +1,67 @@
+<div *ngIf="user" class="container">
+  <div class="row" id="name">
+    <div class="col-xs-12">
+      <h1> {{ userString }} </h1>
+      <div *ngIf="user.classInfo?.year && user.classInfo?.class" class=".h3"> {{user.classInfo.year + 1 | ordinal }} year student, Class of {{ user.classInfo.class }} </div>
+    </div>  
+  </div>
+
+  <div *ngIf="user.username === userContextService.getCurrentUser()?.username">
+    <div class="row">
+      <h2 class="col-sm-12">Options</h2>
+    </div>
+    <div class="row">
+      <button class="btn btn-default" (click)="logout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
+      <h2>Posts</h2>
+      <app-post-pager [posts]="posts"></app-post-pager>
+    </div>
+
+    <div class="col-md-6 col-xs-12">
+      <div class="row">
+        <h2 class="col-xs-12">Course History</h2>
+      </div>
+      <div class="row">
+        <h3 class="col-xs-12">Previously Taken</h3>
+      </div>
+      <div *ngIf="pastCourses?.length > 0" class="row overflow">
+        <app-course-card class="card" *ngFor="let course of pastCourses" [course]="course"></app-course-card>
+      </div>
+      <div *ngIf="pastCourses?.length === 0" class="row">
+        <p>No courses in this category</p>
+      </div>
+
+      <div class="row">
+        <h3 class="col-xs-12">Currently Taking</h3>
+      </div>
+      <div *ngIf="currentCourses?.length > 0" class="row overflow">
+        <app-course-card class="card" *ngFor="let course of currentCourses" [course]="course"></app-course-card>
+      </div>
+      <div *ngIf="currentCourses?.length === 0" class="row">
+        <p>No courses in this category</p>
+      </div>
+
+      <div class="row">
+        <h3 class="col-xs-12">Planning to Take</h3>
+      </div>
+
+      <div *ngIf="futureCourses?.length > 0" class="row overflow">
+        <app-course-card class="card" *ngFor="let course of futureCourses" [course]="course"></app-course-card>
+      </div>
+      <div *ngIf="futureCourses?.length === 0" class="row">
+        <p>No courses in this category</p>
+      </div>
+
+    </div>
+  </div>
+
+<div *ngIf="!user" class="container">
+  <div class="row">
+    <h2>Uh oh. It doesn't look like a profile by this name exists yet</h2>
+    <p>You can create one <a routerLink="/login">here</a></p>
+  </div> 
+</div>

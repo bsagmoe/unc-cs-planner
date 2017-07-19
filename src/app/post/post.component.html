@@ -1,0 +1,38 @@
+<div class="post">
+
+   <!-- Post meta-info -->
+  <div class="post-info">
+    <div class="post-info-user">
+      <a *ngIf="post.user" [routerLink]="['/profile', post.user.username ]"> {{ getUserString() }}</a>
+      <span *ngIf="!post.user">[deleted]</span>
+    </div>
+    <div class="post-info-date">
+      {{ post?.date | date }} at {{ post?.date | date:'shortTime' }}
+    </div>
+  </div>
+
+
+  <!-- The post's body and tags -->
+  <div class="post-text">
+    <p>{{ post.text }}</p>
+    <div *ngIf="post.tags.length > 0">
+      <span class="tag-chip" *ngFor="let tag of post.tags">{{ tag }}</span>
+    </div>
+  </div>
+
+  <!-- Form for creating a comment if the user is logged in -->
+  <div *ngIf="user" class="post-add-comment">
+    <form id="comment-form">
+      <md-input-container>
+        <textarea mdInput required [(ngModel)]="text" name="text" placeholder="Comment"></textarea>
+      </md-input-container>        
+      <button (click)="submitComment()" md-button color="primary">Submit</button>
+    </form>
+  </div>
+
+  <!-- Comment section -->
+  <div *ngIf="post.comments?.length > 0" class="post-comments">
+    <app-comment *ngFor="let comment of post.comments" [comment]="comment" [level]="0"></app-comment>
+  </div>
+  
+</div>

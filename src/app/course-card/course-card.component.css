@@ -1,0 +1,45 @@
+.course-card {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px; 
+    height: 8em;
+    border-radius: 1em;
+    box-shadow: 0 0 1px #7BAFD4;
+    transition: all .2s ease-in-out;
+    user-select: none;
+    padding: 1em;
+    background-color: white;
+}
+
+.course-card:hover {
+    box-shadow: 0 0 5px #7BAFD4;
+}
+
+.course-code {
+    font-size: 2em;
+    text-align: center;
+}
+
+.course-name {
+    font-size: 1em;
+    text-align: center;
+}
+
+.semester {
+    font-size: .75em;
+    text-align: center;
+}
+
+@media(max-width: 1200px){
+    .course-card {
+        font-size: 10px;
+    }
+}
+
+@media(max-width: 520px){
+    .course-card {
+        font-size: 8px;
+    }
+}

@@ -1,0 +1,34 @@
+.options-row {
+    margin-bottom: 30px;
+}
+
+.options-col {
+    display: flex;
+}
+
+form {
+    border: thin solid #5C839E;
+    padding: 2em;
+}
+
+.post-form {
+    float: initial;
+    margin: 1em auto;
+}
+
+md-input-container {
+    width: 100%;
+}
+
+button:focus, button:active {
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.post-container {
+    display: flex;
+    flex-wrap: wrap;
+}
