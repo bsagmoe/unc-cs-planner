@@ -28,11 +28,12 @@ export class AuthService {
     return this._user !== null;
   }
 
-  get id(): string {
+  get uid(): string {
     return this.authenticated ? this.user.uid : '';
   }
 
   signInWithGoogle(): firebase.Promise<any> {
+    console.log('signing in with google')
     return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
       .then(response => {
         this.db.object(`/users/${response.user.uid}`)
@@ -53,22 +54,26 @@ export class AuthService {
   }
 
   signInWithEmailAndPassword(email: string, password: string): firebase.Promise<any> {
+      console.log('signing in with email and password')
       return this.afAuth.auth.signInWithEmailAndPassword(email, password)
         .catch(err => console.log('ERROR @ AuthService#signInWithEmailAndPassword() :', err))
   }
 
   registerWithEmailAndPassword(email: string, password: string): firebase.Promise<any> {
+      console.log('registering')
       return this.afAuth.auth.createUserWithEmailAndPassword(email, password)
-        .then(res => {
-            this.db.object(`/users/${res.user.uid}`)
+        .then(user => {
+            this.db.object(`/users/${user.uid}`)
                 .set({
-                    email
+                    email,
+                    uid: user.uid,
                 })
         })
         .catch(err => console.log('ERROR @ AuthService#registerWithEmailAndPassword() :', err))
   }
 
   signOut(): void {
+    console.log('signing out')
     this.afAuth.auth.signOut();
   }
 
