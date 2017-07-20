@@ -13,7 +13,7 @@
 
     <!-- All of the stuff that shows up below a comment -->
     <p  class="comment-interaction">
-      <a *ngIf="userContextService.getCurrentUser()" (click)="makingReply = !makingReply">
+      <a *ngIf="authService.authenticated" (click)="makingReply = !makingReply">
         <span *ngIf="!makingReply">Reply</span>
         <span *ngIf="makingReply">Cancel reply</span>
       </a>

@@ -6,7 +6,7 @@
     </div>  
   </div>
 
-  <div *ngIf="user.username === userContextService.getCurrentUser()?.username">
+  <div *ngIf="authService.uid === user.uid ">
     <div class="row">
       <h2 class="col-sm-12">Options</h2>
     </div>

@@ -6,7 +6,7 @@ import { Comment } from '../comment'
 
 import { PostService } from '../services/post.service'
 import { CommentService } from '../services/comment.service'
-import { UserContextService } from '../services/user-context.service'
+import { AuthService } from '../services/auth.service'
 
 @Component({
   selector: 'app-post',
@@ -15,7 +15,7 @@ import { UserContextService } from '../services/user-context.service'
   providers: [ CommentService ]
 })
 
-export class PostComponent implements OnInit {
+export class PostComponent {
 
   @Input()
   post: Post;
@@ -26,31 +26,27 @@ export class PostComponent implements OnInit {
 
   constructor(private commentService: CommentService,
               private postService: PostService,
-              private userContextService: UserContextService ) { }
-
-  ngOnInit() {
-    this.user = this.userContextService.getCurrentUser()
-  }
+              private authService: AuthService) { }
 
   getUserString(): string {
      if (!this.post.user) {
         return;
-     } else if (this.post.user.name['first'] && this.post.user.name['last']){
-        return this.post.user.name['first'] + " " + this.post.user.name['last'];
+     } else if (this.post.user.name['first'] && this.post.user.name['last']) {
+        return this.post.user.name['first'] + ' ' + this.post.user.name['last'];
     } else {
         return this.post.user.username;
     }
   }
 
-  submitComment(){
+  submitComment() {
     let comment;
-    if(this.text && this.text.trim()){
+    if (this.text && this.text.trim()) {
       this.commentService.createComment(this.text, this.post._id).then(
         res => {
-          this.text = '';
+          this.text = '';   // reset the comment box to be empty
           comment = res as Comment;
-          this.post.comments.push(comment);
-          this.postService.addCommentToPost(this.post._id, comment._id)
+          this.post.comments.push(comment);                             // link the comment to the post locally
+          this.postService.addCommentToPost(this.post._id, comment._id) // link the comment to the post globally
                 .then().catch(err => {console.log(err)});
         }
       ).catch(err => {console.log(err)});

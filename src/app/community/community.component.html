@@ -12,13 +12,13 @@
           <button class="btn btn-default" type="button" (click)="filterPosts()">Search by tags</button>
         </span>
       </div>
-      <button id="post-button" class="btn btn-default col-xs-4 col-sm-2" [disabled]="!userContextService.getCurrentUser()" (click)="makingPost = !makingPost">Make a post</button>
+      <button id="post-button" class="btn btn-default col-xs-4 col-sm-2" [disabled]="!authService.authenticated" (click)="makingPost = !makingPost">Make a post</button>
     </div>
   </div>
  
  <!-- The row for the forrm to submit a new post -->
   <div class="row">
-    <div class="col-xs-12 col-sm-6 post-form" *ngIf="userContextService.getCurrentUser()" [hidden]="!makingPost" >
+    <div class="col-xs-12 col-sm-6 post-form" *ngIf="authService.authenticated" [hidden]="!makingPost" >
       <form #postForm="ngForm">
         <md-input-container>
           <textarea class="form-post-text" [(ngModel)]="model.text" name="text" mdInput mdTextareaAutosize required placeholder="Text"></textarea>
@@ -41,8 +41,6 @@
     <div *ngIf="posts?.length === 0" class="text-center">
       <span class="h2">No posts were found!</span>
     </div>
-
-    <!--<button md-fab color="primary" style="position: fixed; right: 40px; bottom: 40px;"><md-icon>add</md-icon></button>-->
   </div>
 </div>
 

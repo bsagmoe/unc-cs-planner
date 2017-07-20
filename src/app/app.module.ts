@@ -16,7 +16,6 @@ import { environment } from 'environments/environment'
 import { AuthService } from './services/auth.service'
 import { PostService } from './services/post.service'
 import { CommentService } from './services/comment.service'
-import { UserContextService } from './services/user-context.service'
 
 // Components
 import { AppComponent } from './app.component';
@@ -61,7 +60,7 @@ import { PostPagerComponent } from './post-pager/post-pager.component';
     HttpModule,
     MaterialModule,
   ],
-  providers: [ PostService, AuthService, UserContextService ],
+  providers: [ PostService, AuthService ],
   bootstrap: [ AppComponent ]
 })
 

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router'
 import { AngularFireAuth } from 'angularfire2/auth'
 import { AuthService } from '../services/auth.service'
-import { UserContextService } from '../services/user-context.service'
 import { LoginModel } from '../form-models/login.model'
 import { Observable } from 'rxjs/Observable'
 import * as firebase from 'firebase/app'

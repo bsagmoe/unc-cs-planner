@@ -20,19 +20,19 @@
     </div>
   </div>
 
+  <!-- Comment section -->
+  <div *ngIf="post.comments?.length > 0" class="post-comments">
+    <app-comment *ngFor="let comment of post.comments" [comment]="comment" [level]="0"></app-comment>
+  </div>
+
   <!-- Form for creating a comment if the user is logged in -->
-  <div *ngIf="user" class="post-add-comment">
+  <div *ngIf="authService.authenticated" class="post-add-comment">
     <form id="comment-form">
       <md-input-container>
         <textarea mdInput required [(ngModel)]="text" name="text" placeholder="Comment"></textarea>
       </md-input-container>        
       <button (click)="submitComment()" md-button color="primary">Submit</button>
     </form>
-  </div>
-
-  <!-- Comment section -->
-  <div *ngIf="post.comments?.length > 0" class="post-comments">
-    <app-comment *ngFor="let comment of post.comments" [comment]="comment" [level]="0"></app-comment>
   </div>
   
 </div>

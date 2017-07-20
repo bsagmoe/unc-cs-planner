@@ -3,8 +3,8 @@
     <nav md-tab-nav-bar>
         <a class="nav-tab" md-tab-link routerLink='/community' routerLinkActive #community="routerLinkActive" [active]="community.isActive">Community</a>
         <a class="nav-tab" md-tab-link routerLink='/roadmap' routerLinkActive #roadmap="routerLinkActive" [active]="roadmap.isActive">Roadmap</a>
-        <a class="nav-tab" md-tab-link routerLink='/login' routerLinkActive #login="routerLinkActive" [active]="login.isActive" *ngIf='!userContextService.getCurrentUser()' >Login</a>
-        <a class="nav-tab" md-tab-link [routerLink]="['/profile', userContextService.getCurrentUser().username]" routerLinkActive #profile="routerLinkActive" [active]="profile.isActive" *ngIf='userContextService.getCurrentUser()'>Profile</a>
+        <a class="nav-tab" md-tab-link routerLink='/login' routerLinkActive #login="routerLinkActive" [active]="login.isActive" *ngIf='!authService.authenticated'>Login</a>
+        <a class="nav-tab" md-tab-link routerLink='/profile' routerLinkActive #profile="routerLinkActive" [active]="profile.isActive" *ngIf='authService.authenticated'>Profile</a>
         <a class="nav-tab" md-tab-link routerLink='/info' routerLinkActive #info="routerLinkActive" [active]="info.isActive">Info</a>
     </nav>
 </header>
