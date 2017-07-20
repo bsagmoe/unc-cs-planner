@@ -6,7 +6,6 @@ import { AngularFireAuthModule, AngularFireAuth } from 'angularfire2/auth'
 import { environment } from '../environments/environment'
 
 import { HeaderComponent } from './header/header.component'
-import { DashboardComponent } from './dashboard/dashboard.component'
 import { CommunityComponent } from './community/community.component'
 import { RoadmapComponent } from './roadmap/roadmap.component'
 import { ProfileComponent } from './profile/profile.component'

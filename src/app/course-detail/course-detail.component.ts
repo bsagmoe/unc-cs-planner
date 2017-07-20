@@ -118,35 +118,35 @@ export class CourseDetailComponent implements OnInit {
     // If the button being clicked is the same one as is already active, we should remove the course from the planner
     status = shouldToggle ? 'none' : status
 
-    this.userService.updateUserCourses(this.course._id, status)
-      .then(res => {
+    // this.userService.updateUserCourses(this.course._id, status)
+    //   .then(res => {
 
-        switch (status) {
-          case 'past':
-            this.isPastCourse = !this.isPastCourse;
-            this.isCurrentCourse = false;
-            this.isFutureCourse = false;
-            break;
-          case 'current':
-            this.isPastCourse = false;
-            this.isCurrentCourse = !this.isCurrentCourse;
-            this.isFutureCourse = false;
-            break;
-          case 'future':
-            this.isPastCourse = false;
-            this.isCurrentCourse = false;
-            this.isFutureCourse = !this.isFutureCourse;
-            break;
-          default:
-            this.isPastCourse = false;
-            this.isCurrentCourse = false;
-            this.isFutureCourse = false;
-            break;
-        }
+    //     switch (status) {
+    //       case 'past':
+    //         this.isPastCourse = !this.isPastCourse;
+    //         this.isCurrentCourse = false;
+    //         this.isFutureCourse = false;
+    //         break;
+    //       case 'current':
+    //         this.isPastCourse = false;
+    //         this.isCurrentCourse = !this.isCurrentCourse;
+    //         this.isFutureCourse = false;
+    //         break;
+    //       case 'future':
+    //         this.isPastCourse = false;
+    //         this.isCurrentCourse = false;
+    //         this.isFutureCourse = !this.isFutureCourse;
+    //         break;
+    //       default:
+    //         this.isPastCourse = false;
+    //         this.isCurrentCourse = false;
+    //         this.isFutureCourse = false;
+    //         break;
+    //     }
 
-        // this.userContextService.setCurrentUser(res);
-      })
-      .catch();
+    //     // this.userContextService.setCurrentUser(res);
+    //   })
+    //   .catch();
   }
 
 }
