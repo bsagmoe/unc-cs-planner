@@ -8,9 +8,12 @@ import { MaterialModule } from '@angular/material'
 
 // Firebase
 import { AngularFireModule } from 'angularfire2'
+import { AngularFireAuthModule } from 'angularfire2/auth'
+import { AngularFireDatabaseModule } from 'angularfire2/database'
 import { environment } from 'environments/environment'
 
 // UNC CS Planner Services
+import { AuthService } from './services/auth.service'
 import { PostService } from './services/post.service'
 import { CommentService } from './services/comment.service'
 import { UserContextService } from './services/user-context.service'
@@ -32,7 +35,6 @@ import { CourseDetailComponent } from './course-detail/course-detail.component';
 import { CourseCardComponent } from './course-card/course-card.component';
 import { OrdinalPipe } from './ordinal.pipe';
 import { LoginComponent } from './login/login.component';
-import { RegisterComponent } from './register/register.component';
 import { PostComponent } from './post/post.component';
 import { CommentComponent } from './comment/comment.component';
 import { PostPagerComponent } from './post-pager/post-pager.component';
@@ -54,7 +56,6 @@ import { PostPagerComponent } from './post-pager/post-pager.component';
     CourseCardComponent,
     OrdinalPipe,
     LoginComponent,
-    RegisterComponent,
     PostComponent,
     CommentComponent,
     PostPagerComponent,
@@ -62,13 +63,15 @@ import { PostPagerComponent } from './post-pager/post-pager.component';
   imports: [
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     HttpModule,
     MaterialModule,
   ],
-  providers: [ PostService, UserContextService ],
+  providers: [ PostService, AuthService, UserContextService ],
   bootstrap: [ AppComponent ]
 })
 export class AppModule { }
