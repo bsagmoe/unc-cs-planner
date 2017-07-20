@@ -22,11 +22,6 @@ import { UserContextService } from './services/user-context.service'
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component'
 import { AppRoutingModule } from './app-routing.module';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { CommunityPreviewComponent } from './preview/community-preview/community-preview.component';
-import { RoadmapPreviewComponent } from './preview/roadmap-preview/roadmap-preview.component';
-import { ProfilePreviewComponent } from './preview/profile-preview/profile-preview.component';
-import { InfoPreviewComponent } from './preview/info-preview/info-preview.component';
 import { CommunityComponent } from './community/community.component';
 import { RoadmapComponent } from './roadmap/roadmap.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -43,11 +38,6 @@ import { PostPagerComponent } from './post-pager/post-pager.component';
   declarations: [
     AppComponent,
     HeaderComponent,
-    DashboardComponent,
-    CommunityPreviewComponent,
-    RoadmapPreviewComponent,
-    ProfilePreviewComponent,
-    InfoPreviewComponent,
     CommunityComponent,
     RoadmapComponent,
     ProfileComponent,
@@ -74,4 +64,5 @@ import { PostPagerComponent } from './post-pager/post-pager.component';
   providers: [ PostService, AuthService, UserContextService ],
   bootstrap: [ AppComponent ]
 })
+
 export class AppModule { }
