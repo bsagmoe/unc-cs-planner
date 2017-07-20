@@ -1,28 +1,49 @@
 <md-tab-group>
   <md-tab label="Login">
-    <div class="container">
+    <button (click)="signOut">Sign out</button>
     <h1>Login</h1>
-    <form (ngSubmit)="onSubmit()"  #loginForm="ngForm" class="col-xs-12 col-sm-8 col-md-6">
-
-      <div [hidden]="!error" class="alert alert-danger">
-        {{ error }}
+    <div class="row">
+      <div class="col-xs-12 col-md-6">
+        <h2>With Google</h2>
+        <div>No registration needed!</div>
+        <button class="btn btn-default" (click)="signInWithGoogle()">Login</button>
       </div>
+      <div class="col-xs-12 col-md-6">
+        <h2>With Email</h2>
+        <form (ngSubmit)="signInWithEmailAndPassword()" #loginForm="ngForm">
+          <div class="form-group">
+            <label for="email">Username</label>
+            <input type="text" class="form-control" id="email" required [(ngModel)]="loginModel.email" name="email">
+          </div>
 
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" required id="password" [(ngModel)]="loginModel.password" name="password">
+          </div>
+          
+          <button type="submit" class="btn btn-default" [disabled]="!loginForm.form.valid">Login</button>
+        </form>
+      </div>
+    </div>
+    <div [hidden]="!loginError"> {{ loginError?.message }} </div>
+  </md-tab>
+
+  
+  <md-tab label="Register">
+    <h1>Register</h1>
+    <form (ngSubmit)="register()" #registerForm="ngForm" class="col-xs-12 col-sm-8 col-md-6">
       <div class="form-group">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" id="username" required [(ngModel)]="model.username" name="username">
+        <label for="email">Username</label>
+        <input type="text" class="form-control" id="email" required [(ngModel)]="registrationModel.email" name="email">
       </div>
 
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" class="form-control" required id="password" [(ngModel)]="model.password" name="password">
+        <input type="password" class="form-control" required id="password" [(ngModel)]="registrationModel.password" name="password">
       </div>
       
-      <button type="submit" class="btn btn-default" [disabled]="!loginForm.form.valid">Login</button>
+      <button type="submit" class="btn btn-default" [disabled]="!registerForm.form.valid">Register</button>
     </form>
-</div>
-  </md-tab>
-  <md-tab label="Register">
-    <app-register></app-register>
+    <div [hidden]="!registrationError"> {{ registrationError?.message }} </div>
   </md-tab>
 </md-tab-group>

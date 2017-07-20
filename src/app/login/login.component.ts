@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Headers } from '@angular/http';
 import { Router } from '@angular/router'
+import { AngularFireAuth } from 'angularfire2/auth'
+import { AuthService } from '../services/auth.service'
 import { UserContextService } from '../services/user-context.service'
 import { LoginModel } from '../form-models/login.model'
+import { Observable } from 'rxjs/Observable'
+import * as firebase from 'firebase/app'
 
 @Component({
   selector: 'app-login',
@@ -10,34 +13,43 @@ import { LoginModel } from '../form-models/login.model'
   styleUrls: ['./login.component.css']
 })
 
-export class LoginComponent implements OnInit {
-  
+export class LoginComponent {
 
-  private headers: Headers = new Headers({'Content-Type': 'application/json'});
+  user: Observable<firebase.User>
+  loginModel: LoginModel = new LoginModel('', '');
+  loginError: Error;
+  registrationModel: LoginModel = new LoginModel('', '');
+  registrationError: Error;
 
-  constructor(private http: Http, 
-              private userContextService: UserContextService,
-              private router: Router) { }
+  constructor(private authService: AuthService,
+              private router: Router) {}
 
-  model: LoginModel = new LoginModel("","");
-  error: string;
-
-  ngOnInit() {
-
+  signInWithGoogle(): void {
+    this.authService.signInWithGoogle()
+      .then(res => {
+        this.loginError = null;
+      })
+      .catch(error => this.loginError = error);
   }
 
-  onSubmit(){
-    console.log('logging in');
-    this.http.post('http://localhost:3000/login',
-                   JSON.stringify( { "username": this.model.username, "password": this.model.password} ),
-                   {headers: this.headers})
-              .toPromise().then(res => {
-                this.userContextService.setCurrentUser(res.json());
-                this.router.navigate(['/profile', res.json().username]);
-              }).catch(res => {
-                console.log(res.json());
-                this.error = res.json().message;
-              });
+  signInWithEmailAndPassword(): void {
+    this.authService.signInWithEmailAndPassword(this.loginModel.email, this.loginModel.password)
+      .then(res => {
+        this.loginError = null;
+      })
+      .catch(error => this.loginError = error);
+  }
+
+  register(): void {
+    this.authService.registerWithEmailAndPassword(this.registrationModel.email, this.registrationModel.password)
+      .then(res => {
+        this.registrationError = null;
+      })
+      .catch(error => this.registrationError = error)
+  }
+
+  signOut(): void {
+    this.authService.signOut();
   }
 
 }
