@@ -1,6 +1,11 @@
-<div class="course-card">
+<div class="course-card" [ngClass]="{'current': isCurrent, 'past': isPast, 'future': isFuture}">
   <div>
     <div [id]="course.dept + '_' + course.number" class="course-code">{{ course.dept + " " + course.number }}</div>
+    <span *ngIf="authenticated">
+      <mat-icon *ngIf="isCurrent">loop</mat-icon>
+      <mat-icon *ngIf="isPast">done</mat-icon>
+      <mat-icon *ngIf="isFuture">schedule</mat-icon>
+    </span>
     <div class="hidden-xs course-name">{{ course.title}}</div>
     <div class="semester"> {{ semesterString }}</div>
   </div>

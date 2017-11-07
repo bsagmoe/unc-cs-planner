@@ -12,16 +12,23 @@ export class CourseCardComponent implements OnInit {
   @Input()
   course: Course;
 
+  @Input()
+  authenticated: boolean;
+
   semesterString: string;
 
-  upperCaseFirst(str: string):string {
+  isCurrent: boolean;
+  isPast: boolean;
+  isFuture: boolean;
+
+  upperCaseFirst(str: string): string {
     // I made a type when creating the database
     if(str == 'infreqent') str = 'infrequent'
     return str.charAt(0).toUpperCase() + str.substr(1);
   }
-  
+
   setSemesterString(): void {
-    switch(this.course.semesters.length){
+    switch (this.course.semesters.length) {
       case 0:
         this.semesterString = 'Unknown'
         break;
@@ -41,6 +48,9 @@ export class CourseCardComponent implements OnInit {
 
   ngOnInit() {
     this.setSemesterString();
+    this.isCurrent = localStorage.getItem(this.course.dept + this.course.number + this.course.modifier) === 'current';
+    this.isPast = localStorage.getItem(this.course.dept + this.course.number + this.course.modifier) === 'past';
+    this.isFuture = localStorage.getItem(this.course.dept + this.course.number + this.course.modifier) === 'future';
   }
 
 }

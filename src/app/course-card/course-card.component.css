@@ -13,6 +13,13 @@
     background-color: white;
 }
 
+mat-icon {
+    position: absolute;
+    top: 1em;
+    right: 2em;
+    color: #7BAFD4;
+}
+
 .course-card:hover {
     box-shadow: 0 0 5px #7BAFD4;
 }
