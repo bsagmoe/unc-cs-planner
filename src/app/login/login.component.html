@@ -1,18 +1,11 @@
-<md-tab-group>
-  <md-tab label="Login">
-    <button (click)="signOut()">Sign out</button>
-    <h1>Login</h1>
-    <div class="row">
-      <div class="col-xs-12 col-md-6">
-        <h2>With Google</h2>
-        <div>No registration needed!</div>
-        <button class="btn btn-default" (click)="signInWithGoogle()">Login</button>
-      </div>
-      <div class="col-xs-12 col-md-6">
-        <h2>With Email</h2>
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+      <h1>Login</h1>
+      <div>
         <form (ngSubmit)="signInWithEmailAndPassword()" #loginForm="ngForm">
           <div class="form-group">
-            <label for="email">Username</label>
+            <label for="email">Email</label>
             <input type="text" class="form-control" id="email" required [(ngModel)]="loginModel.email" name="email">
           </div>
 
@@ -24,26 +17,58 @@
           <button type="submit" class="btn btn-default" [disabled]="!loginForm.form.valid">Login</button>
         </form>
       </div>
+      <div [hidden]="!loginError"> {{ loginError?.message }} </div>
     </div>
-    <div [hidden]="!loginError"> {{ loginError?.message }} </div>
-  </md-tab>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-offset-3 col-sm-6">
+      <hr>
+      <h1>Register</h1>
+      <div [hidden]="registrationSubmitted">
+        <form (ngSubmit)="register()" #registerForm="ngForm">
+          <div class="form-group">
+            <label for="email">UNC Email*</label>
+            <input type="text" class="form-control" id="email" required [(ngModel)]="registrationModel.email" name="email">
+          </div>
 
-  
-  <md-tab label="Register">
-    <h1>Register</h1>
-    <form (ngSubmit)="register()" #registerForm="ngForm" class="col-xs-12 col-sm-8 col-md-6">
-      <div class="form-group">
-        <label for="email">Username</label>
-        <input type="text" class="form-control" id="email" required [(ngModel)]="registrationModel.email" name="email">
-      </div>
+          <div class="form-group">
+            <label for="password">Password*</label>
+            <input type="password" class="form-control" required id="password" [(ngModel)]="registrationModel.password" name="password">
+          </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" class="form-control" required id="password" [(ngModel)]="registrationModel.password" name="password">
+          <div class="form-group">
+            <label for="confirm-password">Confirm Password*</label>
+            <input type="password" class="form-control" required id="confirm-password" [(ngModel)]="registrationModel.confirmPassword" name="confirm-password">
+          </div>
+
+          <!--<div class="form-group">
+            <label for="first-name">First Name</label>
+            <input type="text" class="form-control" id="first-name" [(ngModel)]="registrationModel.firstName" name="first-name">
+          </div>
+
+          <div class="form-group">
+            <label for="last-name">Last Name</label>
+            <input type="text" class="form-control" id="last-name" [(ngModel)]="registrationModel.lastName" name="last-name">
+          </div>
+
+          <div class="form-group">
+            <label for="graduation-year">Graduation Year</label>
+            <input type="text" class="form-control" id="graduation-year" [(ngModel)]="registrationModel.graduationYear" name="graduation-year">
+          </div>
+          -->
+
+          <div class="form-group">
+            <label for="is-private">Hide Profile</label>
+            <input type="checkbox" id="is-private" [(ngModel)]="registrationModel.isPrivate" name="is-private">
+          </div>
+
+          <button type="submit" class="btn btn-default" [disabled]="!registerForm.form.valid">Register</button>
+        </form>
       </div>
-      
-      <button type="submit" class="btn btn-default" [disabled]="!registerForm.form.valid">Register</button>
-    </form>
-    <div [hidden]="!registrationError"> {{ registrationError?.message }} </div>
-  </md-tab>
-</md-tab-group>
+      <div [hidden]="!registrationSubmitted">
+        <p>A verification email has been sent to {{registrationModel.email}}. You will not be able to make posts or comment until you validate your account!</p>
+      </div>
+      <div [hidden]="!registrationError"> {{ registrationError?.message }} </div>
+    </div>
+  </div>
+</div>

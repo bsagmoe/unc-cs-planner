@@ -1,10 +1,15 @@
-* {
-    font-family: 'Share Tech', sans-serif;
+/*.ng-valid[required], .ng-valid.required  {
+  border-left: 5px solid #7bafd4;
 }
 
-md-tab-group {
-    max-width: 600px;
+.ng-invalid:not(form)  {
+  border-left: 5px solid #a94442;
+}*/
+
+mat-tab-group {
+    max-width: 400px;
     margin: 0 auto;
+    padding: 0 1em;
 }
 
 .form-group {
