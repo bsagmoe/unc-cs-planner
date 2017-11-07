@@ -1,12 +1,12 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
-# private info
-/src/environments
-
 # compiled output
 /dist
 /tmp
 /out-tsc
+
+# env files
+/src/app/environments
 
 # dependencies
 /node_modules
