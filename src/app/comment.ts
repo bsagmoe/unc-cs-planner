@@ -1,12 +1,15 @@
 import { User } from './user'
 
 export class Comment {
-
-    _id: string;
-    parent: string;
+    id: string;
+    path: string;
     text: string;
     date: Date;
+    editDate: Date;
+    edited: boolean;
+    redacted: boolean;
     comments: Comment[];
-    user: User;
-    meta: number;
+    uid: string;
+    displayName: string;
+    likes: object;
 }

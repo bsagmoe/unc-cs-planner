@@ -2,12 +2,14 @@ import { User } from './user'
 import { Comment } from './comment'
 
 export class Post {
-    _id: string;
+    id: string;
     text: string;
     date: Date;
+    editDate: Date;
+    edited: boolean;
+    tagObject: object;
     tags: string[];
     comments: Comment[];
-    user: User;
-
-    __v: number;
+    uid: string;
+    displayName: string;
 }
