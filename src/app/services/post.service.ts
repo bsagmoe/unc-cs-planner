@@ -1,65 +1,74 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, Response } from '@angular/http';
-import 'rxjs/add/operator/toPromise';
-
+import { AngularFirestore,  AngularFirestoreDocument, AngularFirestoreCollection} from 'angularfire2/firestore'
 import { Post } from '../post'
-
 
 @Injectable()
 export class PostService {
-  // Again, redo this to reflect using Firebase instead of mongo
 
-  private baseUrl = 'http://localhost:3000/api';
-  private postsUrl = `${ this.baseUrl }/posts`;
+  constructor(private afs: AngularFirestore) { }
 
-  headers: Headers = new Headers({'Content-Type': 'application/json'});
-
-  constructor(private http: Http) { }
-
-  createPost(text: string, tags: string[]): Promise<Post> {
-
-    const postBody = JSON.stringify({
-        text: text,
-        tags: tags,
-      })
-
-    return this.http.post(this.postsUrl, postBody, { headers: this.headers } )
-      .toPromise().then(response => response.json() as Post).catch(this.handleError);
+  formatTag(tag: string): string {
+    return tag.toLowerCase().replace(/\s/, '');
   }
 
+  getTabObject(tags: string[]): object {
+    const tagObject = {};
+    tags.map(tag => this.formatTag(tag)).forEach(tag => tagObject[tag] = true);
+    return tagObject;
+  }
 
-  addCommentToPost(postId: string, commentId: string) {
+  getTags(tagString: string): string[] {
+    let tags;
+    if (tagString) {
+      tags = tagString.split(',').map(tag => tag.trim());
+    } else {
+      tags = [];
+    }
 
-    const patchBody = JSON.stringify({
-      commentId: commentId,
+    return tags;
+  }
+
+  createPost(text: string, tagString: string, uid: string, displayName: string): Promise<any> {
+    const id = this.afs.createId();
+    const tags = this.getTags(tagString);
+
+    const post = {
+      id,
+      text,
+      tags,
+      tagObject: this.getTabObject(tags),
+      date: Date.now(),
+      edited: false,
+      uid,
+      displayName
+    }
+
+    return this.afs.collection('/posts').doc(id).set(post);
+  }
+
+  editPost(text: string, tagString: string, postId: string) {
+    const tags = this.getTags(tagString);
+
+    return this.afs.doc(`/posts/${postId}`).update({
+      text,
+      tags,
+      tagObject: this.getTabObject(tags),
+      edited: true,
+      editDate: Date.now()
     })
-
-    return this.http.patch(`${this.postsUrl}/${postId}`, patchBody, { headers: this.headers })
-            .toPromise().then(response => response.json() as Post)
-            .catch(this.handleError);
   }
 
-  getPost(postId: string): Promise<Post> {
-    console.log('Getting post:', postId)
-    return this.http.get(`${this.postsUrl}/${postId}`)
-            .toPromise().then(response => response.json() as Post)
-            .catch(this.handleError);
+  getPosts(): AngularFirestoreCollection<Post> {
+    // TODO: Implement paging on here
+    return this.afs.collection<Post>('/posts', ref => ref.orderBy('date', 'desc'));
   }
 
-  getPosts(): Promise<Post[]> {
-    return this.http.get(this.postsUrl)
-            .toPromise().then(response => response.json() as Post[])
-            .catch(this.handleError);
+  getPostsByUser(uid: string): AngularFirestoreCollection<Post> {
+    return this.afs.collection<Post>('/posts', ref => ref.where('uid', '==', uid).orderBy('date', 'desc'));
   }
 
-  getPostsWithTags(tags: string[]): Promise<Post[]> {
-    return this.http.get(`${this.postsUrl}/${JSON.stringify(tags)}`)
-            .toPromise().then(response => response.json() as Post[])
-            .catch(this.handleError);
-  }
-
-  handleError(error: any): Promise<any> {
-    console.error('An error occured', error);
-    return Promise.reject(error.message || error);
+  getPostsWithTag(tag: string): AngularFirestoreCollection<Post> {
+    tag = this.formatTag(tag);
+    return this.afs.collection<Post>('/posts', ref => ref.where('tagObject.' + tag, '==', true));
   }
 }

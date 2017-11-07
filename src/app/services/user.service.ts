@@ -1,39 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http'
 
+import { AngularFirestore,  AngularFirestoreDocument, AngularFirestoreCollection} from 'angularfire2/firestore'
+
+import { Course } from '../course'
 import { User } from '../user'
+import { UserCourse } from '../user-course'
 import { Post } from '../post'
-import { PlannerStatus } from '../course-detail/course-detail.component'
+import { PlannerStatus } from '../user-course'
 
 @Injectable()
 export class UserService {
 
-  private userUrl = 'http://localhost:3000/api/users'
-  private headers = new Headers({'Content-Type': 'application/json'});
+  constructor(private afs: AngularFirestore) { }
 
-  constructor(private http: Http) { }
-
-  getUser(username: String): Promise<User> {
-    return this.http.get(`${this.userUrl}/${username}`)
-            .toPromise().then(user => user.json() as User)
-            .catch(err => console.error(err))
+  getUser(uid: string): AngularFirestoreDocument<User> {
+    return this.afs.doc<User>(`/users/${uid}`);
   }
 
-  getUserPosts(userId: String): Promise<Post[]> {
-    return this.http.get(`${this.userUrl}/${userId}/posts`)
-            .toPromise().then(posts => posts.json() as Post[])
-            .catch(err => console.error(err))
+  createUser(uid: string, body: any): Promise<void> {
+    return this.afs.doc<User>(`/users/${uid}`).set(body);
   }
 
-  // updateUserCourses(courseId: string, status: PlannerStatus) {
-  //   const patchBody = JSON.stringify({
-  //     status: status
-  //   })
+  updateUser(uid: string, body: any): Promise<void> {
+    return this.afs.doc<User>(`/users/${uid}`).update(body);
+  }
 
-  //   return this.http.patch(`${this.userUrl}/${currentUser._id}/courses/${courseId}`, patchBody, { headers: this.headers })
-  //           .toPromise()
-  //           .then(res => res.json() as User)
-  //           .catch(err => console.error(err))
-  // }
+  getUserCourses(uid: string): AngularFirestoreCollection<UserCourse> {
+    return this.afs.collection<UserCourse>(`/users/${uid}/courses/`);
+  }
 
+  removeUserCourse(uid: string, course: Course): Promise<void> {
+    return this.afs.collection<UserCourse>(`/users/${uid}/courses`).doc(course.dept + course.number + course.modifier).delete();
+  }
+
+  updateUserCourses(uid: string, course: Course, plannerStatus: PlannerStatus, key: string) {
+    const courseCollection = this.afs.collection<UserCourse>(`/users/${uid}/courses`);
+    courseCollection.doc(course.dept + course.number + course.modifier).set( {course, plannerStatus} );
+  }
 }

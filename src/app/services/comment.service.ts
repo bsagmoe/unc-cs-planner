@@ -1,37 +1,64 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
-import 'rxjs/add/operator/toPromise';
+import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore'
 
 import { Comment } from '../comment'
 
 @Injectable()
 export class CommentService {
-  // TODO: this will need to be redone to reflect how Firebase works
 
-  commentUrl = 'http://localhost:3000/api/comments';
-  headers: Headers = new Headers( {'Content-Type': 'application/json'} );
+  constructor(private afs: AngularFirestore) { }
 
-  constructor(private http: Http) { }
+  like(comment: Comment, uid: string) {
+    const likes = comment.likes || {};
+    likes[uid] = true;
 
-  createComment(text: string, parent: string, ): Promise<Comment> {
-
-    const postBody = JSON.stringify({
-      text: text,
-      parent: parent,
-    })
-
-    return this.http.post(this.commentUrl, postBody, { headers: this.headers })
-      .toPromise().then(response => response.json() as Comment).catch();
+    this.afs.doc(comment.path).update( {likes: likes} );
   }
 
-    addCommentToComment(commentId: string, replyId: string) {
-      const patchBody = JSON.stringify({
-        replyId: replyId,
-      })
+  unlike(comment: Comment, uid: string) {
+    delete comment.likes[uid];
+    this.afs.doc(comment.path).update( {likes: comment.likes} );
+  }
 
-      return this.http.patch(`${this.commentUrl}/${commentId}`, patchBody, { headers: this.headers })
-              .toPromise().then(response => response.json() as Comment)
-              .catch();
+  createComment(text: string, parentPath: string, uid: string, displayName: string): Promise<void> {
+    const id = this.afs.createId();
+
+    const comment = {
+      id,
+      path: `${parentPath}/comments/${id}`,
+      text,
+      date: Date.now(),
+      edited: false,
+      uid,
+      displayName,
+      likes: {}
+    }
+
+    return this.afs.collection<Comment>(`${parentPath}/comments`).doc(id).set(comment);
+  }
+
+  editComment(text: string, commentPath: string) {
+    return this.afs.doc(commentPath).update({
+      text,
+      edited: true,
+      editDate: Date.now()
+    })
+  }
+
+  redactComment(path: string) {
+    this.afs.doc(path).update({text: '[deleted]', redacted: true});
+  }
+
+  deleteComment(path: string) {
+    this.afs.doc(path).delete();
+  }
+
+  getPostComments(postId: string): AngularFirestoreCollection<Comment> {
+    return this.getCommentsFromDocument(`/posts/${postId}`);
+  }
+
+  getCommentsFromDocument(path: string): AngularFirestoreCollection<Comment> {
+    return this.afs.collection(`${path}/comments`, ref => ref.orderBy('date', 'asc'));
   }
 
 }

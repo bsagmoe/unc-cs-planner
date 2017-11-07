@@ -1,53 +1,51 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
+import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from 'angularfire2/firestore'
 
 import 'rxjs/add/operator/toPromise';
 
 import { Course } from '../course'
 
+
 @Injectable()
 export class CourseService {
 
-    constructor(private http: Http) {}
-
-    private coursesUrl = 'http://localhost:3000/api/courses';
-    private headers = new Headers({'Content-Type': 'application/json'});
-
-    getCourse(dept: string, number: number): Promise<Course>{
-        const url = `${this.coursesUrl}/${dept.toUpperCase()}/${number}`
-        return this.http.get(url)
-                .toPromise().then(response => response.json() as Course)
-                .catch(this.handleError);
+    constructor( private afs: AngularFirestore ) {
+        // const coursesString =
+        // ``;
+        // const courses: Course[] = JSON.parse(coursesString) as Course[] ;
+        // courses.forEach(course => {
+        //     console.log(course);
+        //     afs.doc(`/courses/${course.dept}/catalog/${course.number + course.modifier}`).set(course)
+        // })
     }
 
-    getCourseWithModifier(dept: string, number: number, modifier: string): Promise<Course>{
-        const url = `${this.coursesUrl}/${dept.toUpperCase()}/${number}/${modifier}`
-        return this.http.get(url)
-                .toPromise().then(response => response.json() as Course)
-                .catch(this.handleError);
+    getCourse(dept: string, number: number): AngularFirestoreDocument<Course> {
+        return this.afs.doc(`/courses/${dept}/catalog/${number}`)
     }
 
-    getCourses(dept: string): Promise<Course[]>{
-        return this.http.get(`${this.coursesUrl}/${dept}`)
-                .toPromise().then(response => response.json() as Course[])
-                .catch(this.handleError);
+    getCourseWithModifier(dept: string, number: number, modifier: string): AngularFirestoreDocument<Course> {
+        return this.afs.doc(`/courses/${dept}/catalog/${number + modifier}`)
     }
 
-    getCoursesInRange(dept: string, min: number, max: number): Promise<Course[]> {
-
-        let args = JSON.stringify({
-            min: min,
-            max: max
-        });
-
-        return this.http.get(`${this.coursesUrl}/${dept}`, {params: { min: min, max: max } })
-                .toPromise().then(response => response.json() as Course[])
-                .catch(this.handleError)
-    }
-    
-    handleError(error: any): Promise<any> {
-        console.error('An error occured', error);
-        return Promise.reject(error.message || error);
+    getCourses(dept: string): AngularFirestoreCollection<Course> {
+        return this.afs.collection(`/courses/${dept}/catalog`)
     }
 
+    getCourseBatch(courses: string[]): Promise<Course[]>  {
+        return Promise.all(
+            courses
+                .map(course => {
+                        const parts = course.split(' ');
+                        return this.getCourse(parts[0], +parts[1])
+                    })
+                .map(document => document.valueChanges().take(1).toPromise())
+        )
+    }
+
+    getCoursesInRange(dept: string, min: number, max: number): AngularFirestoreCollection<Course> {
+        return this.afs.collection(`/courses/${dept}/catalog`,
+            ref => ref.where('number', '>=', min).where('number', '<=', max))
+    }
 }
+
