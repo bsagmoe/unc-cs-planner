@@ -13,27 +13,45 @@
     margin-bottom: 0;
 }
 
+.comment-edited {
+    font-size: .5em;
+    margin-bottom: .5em;
+    opacity: .4;
+}
+
 .comment-user:hover {
     opacity: 1;
 }
 
 .comment-text {
-    margin-bottom: 0;
+    margin-bottom: .5em;
+    word-wrap: break-word;
 }
 
-.comment-reply {
-    margin-left: 1em;
-}
-
-.comment-reply md-input-container{
-   width: 100%;
-}
-
-.comment-reply md-input-container textarea {
+.comment-reply textarea {
     resize: vertical;
+    min-height: 1em;
+}
+
+.comment-reply > button {
+    margin-top: .5em;
+    margin-bottom: .5em;
 }
 
 .comment-interaction {
     font-size: .75em;
     text-transform: lowercase;
+}
+
+.comment-interaction:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.comment-like {
+    color: #7bafd4;
+    height: min-content;
+    width: min-content;
+    font-size: .75em;
+    cursor: pointer;
 }
