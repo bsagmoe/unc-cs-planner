@@ -1,67 +1,126 @@
 <div *ngIf="user" class="container">
   <div class="row" id="name">
-    <div class="col-xs-12">
-      <h1> {{ userString }} </h1>
-      <div *ngIf="user.classInfo?.year && user.classInfo?.class" class=".h3"> {{user.classInfo.year + 1 | ordinal }} year student, Class of {{ user.classInfo.class }} </div>
-    </div>  
+    <div class="col-xs-12 profile-header">
+      <div>
+        <h1>{{ user?.displayName }}</h1>
+        <div *ngIf="authService.uid == user.uid" class="interactions">
+          <button class="btn btn-default" (click)="logout()">Logout</button>
+          <button class="btn btn-default" (click)="toggleProfileVisibility()">Change profile visibility to '{{ user.isPrivate ? 'Visible' : 'Not Visible' }}'</button>
+        </div>
+      </div>
+      
+      <!--<div *ngIf="user.classInfo?.year && user.classInfo?.class" class=".h3"> {{user.classInfo.year + 1 | ordinal }} year student, Class of {{ user.classInfo.class }} </div>-->
+    </div>
   </div>
-
-  <div *ngIf="authService.uid === user.uid ">
+  <div *ngIf="!editing">
     <div class="row">
-      <h2 class="col-sm-12">Options</h2>
-    </div>
-    <div class="row">
-      <button class="btn btn-default" (click)="logout()">Logout</button>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-6 col-xs-12">
-      <h2>Posts</h2>
-      <app-post-pager [posts]="posts"></app-post-pager>
-    </div>
-
-    <div class="col-md-6 col-xs-12">
-      <div class="row">
-        <h2 class="col-xs-12">Course History</h2>
-      </div>
-      <div class="row">
-        <h3 class="col-xs-12">Previously Taken</h3>
-      </div>
-      <div *ngIf="pastCourses?.length > 0" class="row overflow">
-        <app-course-card class="card" *ngFor="let course of pastCourses" [course]="course"></app-course-card>
-      </div>
-      <div *ngIf="pastCourses?.length === 0" class="row">
-        <p>No courses in this category</p>
+      <div class="col-md-6 col-xs-12">
+        <h2>Posts</h2>
+        <app-post-pager [posts]="posts"></app-post-pager>
       </div>
 
-      <div class="row">
-        <h3 class="col-xs-12">Currently Taking</h3>
-      </div>
-      <div *ngIf="currentCourses?.length > 0" class="row overflow">
-        <app-course-card class="card" *ngFor="let course of currentCourses" [course]="course"></app-course-card>
-      </div>
-      <div *ngIf="currentCourses?.length === 0" class="row">
-        <p>No courses in this category</p>
-      </div>
+      <div class="col-md-6 col-xs-12">
+        <div class="row">
+          <h2 class="col-xs-12">Course History</h2>
+        </div>
 
-      <div class="row">
-        <h3 class="col-xs-12">Planning to Take</h3>
-      </div>
+        <div class="row">
+          <h3 class="col-xs-12">Currently Taking</h3>
+        </div>
+        <div *ngIf="currentCourses?.length > 0" class="row course-title-row">
+          <div class="course-title" [routerLink]="['/courses', course.dept, course.number]" *ngFor="let course of currentCourses">{{ course.dept + " " + course.number + ": " + course.title }}</div>
+        </div>
+        <div *ngIf="currentCourses?.length === 0" class="row">
+          <p class="col-xs-12">No courses in this category</p>
+        </div>
+        
+        <div class="row">
+          <h3 class="col-xs-12">Previously Taken</h3>
+        </div>
+        <div *ngIf="pastCourses?.length > 0" class="row course-title-row">
+          <div class="course-title" [routerLink]="['/courses', course.dept, course.number]" *ngFor="let course of pastCourses">{{ course.dept + " " + course.number + ": " + course.title }}</div>
+        </div>
+        <div *ngIf="pastCourses?.length === 0" class="row">
+          <p class="col-xs-12">No courses in this category</p>
+        </div>
 
-      <div *ngIf="futureCourses?.length > 0" class="row overflow">
-        <app-course-card class="card" *ngFor="let course of futureCourses" [course]="course"></app-course-card>
-      </div>
-      <div *ngIf="futureCourses?.length === 0" class="row">
-        <p>No courses in this category</p>
-      </div>
+        <div class="row">
+          <h3 class="col-xs-12">Planning to Take</h3>
+        </div>
 
+        <div *ngIf="futureCourses?.length > 0" class="row course-title-row">
+          <div class="course-title" [routerLink]="['/courses', course.dept, course.number]" *ngFor="let course of futureCourses">{{ course.dept + " " + course.number + ": " + course.title }}</div>
+        </div>
+        <div *ngIf="futureCourses?.length === 0" class="row">
+          <p class="col-xs-12">No courses in this category</p>
+        </div>
+
+      </div>
     </div>
   </div>
+  <div *ngIf="editing">
+    <!--<form class="form-horizontal">
+      <div class="form-group">
+        <label for="firstName" class="col-xs-3 col-sm-2 control-label">First Name</label>
+        <div class="col-xs-9">
+          <input type="text" class="form-control" id="firstName" placeholder="First Name">
+        </div>
+      </div>
 
-<div *ngIf="!user" class="container">
+      <div class="form-group">
+        <label for="lastName" class="col-xs-3 col-sm-2 control-label">Last Name</label>
+        <div class="col-xs-9">
+          <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox"> Display your real name instead of your onyen on posts, comments, and your profile page
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="majors" class="col-xs-3 col-sm-2 control-label">Major(s)</label>
+        <div class="col-xs-9">
+          <input type="text" class="form-control" id="majors" placeholder="Computer Science, Underwater Basket Weaving, etc.">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="minors" class="col-xs-3 col-sm-2 control-label">Minor(s)</label>
+        <div class="col-xs-9">
+          <input type="text" class="form-control" id="minors" placeholder="German, Physics, etc.">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="bio" class="col-xs-3 col-sm-2 control-label">Bio</label>
+        <div class="col-xs-9">
+          <textarea class="form-control" id="bio"></textarea>
+        </div>
+      </div>
+
+    </form>-->
+  </div>
+</div>
+<div class="container" *ngIf="!user && isPrivate">
   <div class="row">
-    <h2>Uh oh. It doesn't look like a profile by this name exists yet</h2>
-    <p>You can create one <a routerLink="/login">here</a></p>
-  </div> 
+    <p class="h2 col-xs-12">This user's profile is private</p>
+  </div>
+</div>
+<div class="container" *ngIf="!user && !isPrivate && authService.authenticated && !loadingUser" >
+  <div class="row">
+    <p class="h2 col-xs-12">Uh oh! It doesn't look like this profile exists (anymore)</p>
+  </div>
+</div>
+<div class="container" *ngIf="!user && !isPrivate && !authService.authenticated && !loadingUser">
+  <div class="row">
+    <p class="h2 col-xs-12">Uh oh! You can't vew people's profiles unless you're logged in</p>
+    <p class="col-xs-12">You can create one your own profile <a routerLink="/login">here</a></p>
+  </div>
 </div>

@@ -2,25 +2,29 @@ h2 {
     line-height: .5em;
 }
 
-h3 {
+.interactions {
+    margin-bottom: 1em;
+}
+
+.course-title {
+    display: inline-block;
     background-color: #7BAFD4;
     padding: .25em .5em;
     color: white;
+    border-radius: .5em;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.course-title-row {
+    margin-left: -5px;
+    margin-right: -5px;
 }
 
 #name {
     background-color: #5C839E;
     color: white;
     margin-top: 15px;
-}
-
-.overflow {
-    overflow-y: hidden;
-    overflow-x: scroll;
-
-    white-space: nowrap;
-    margin: 0;
-    height: 8.5em;
 }
 
 .card:first-of-type {

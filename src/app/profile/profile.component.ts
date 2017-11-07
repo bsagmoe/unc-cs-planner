@@ -4,9 +4,11 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import { Course } from '../course';
 import { User } from '../user';
+import { UserCourse } from '../user-course'
 import { Post } from '../post'
 
 import { UserService } from '../services/user.service'
+import { PostService } from '../services/post.service'
 import { AuthService } from '../services/auth.service'
 
 @Component({
@@ -18,57 +20,81 @@ import { AuthService } from '../services/auth.service'
 
 export class ProfileComponent implements OnInit {
   user: User;
-  userString: string;
+  userCourses: UserCourse[];
   posts: Post[];
+
+  loadingUser: boolean;
+  isPrivate: boolean;
+  editing: boolean;
 
   pastCourses: Course[];
   currentCourses: Course[];
   futureCourses: Course[];
 
-  constructor(private authService: AuthService,
+  constructor(public authService: AuthService,
               private userService: UserService,
-              private http: Http,
+              private postService: PostService,
               private router: Router,
               private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    // TODO: fix this section
-    // let currentUser = this.userContextService.getCurrentUser()
-    // // If the user is logged in and the profile there are viewing is their own,
-    // // use the data we already have in localStorage
-    // if (currentUser && String(this.route.params['_value'].username) === currentUser.username) {
-    //   this.initializeProfile(currentUser)
-    // } else {
-    //   // Using a switchMap guarantees the correct changes are made if you are looking
-    //   // at a different person's profile and click on the profile nav tab (i.e. go to your own)
-    //   this.route.params.switchMap((params: Params) => {
-    //     return this.userService.getUser(String(params['username']))
-    //   }).subscribe(user => this.initializeProfile(user))
-    // }
+    this.loadingUser = true;
+
+    if (this.authService.authenticated === true) {
+      // The user path parameter is defined, so we should try to find that user.
+      // NOTE: the found user can still be the same as the logged in user!
+      if (this.route.params['_value'].username != null) {
+        this.route.params.switchMap((params: Params) => {
+          return this.userService.getUser(params['username']).valueChanges()
+        }).subscribe(user => {
+          // Firebase doesn't just return null but instead has a read-only property '$value'
+          if (!user) {
+            this.user = null;
+            this.loadingUser = false;
+          } else if (user.isPrivate && user.uid !== this.authService.uid) {
+            this.user = null;
+            this.isPrivate = true;
+          } else {
+            this.initializeProfile(user as User);
+          }
+        });
+      } else {
+        // It's the default /profile path, so we just show the authenticated user's profile
+        this.authService.userObject.valueChanges().subscribe(user => {
+          this.initializeProfile(user as User);
+        });
+      }
+    } else {
+      // The client isn't logged in, so they can't see anything
+      this.user = null;
+      this.loadingUser = false;
+    }
   }
 
   initializeProfile(user: User): void {
     this.user = user;
-    this.userString = this.getUserString();
-    this.userService.getUserPosts(this.user._id).then(posts => this.posts = posts);
+    this.loadingUser = false;
 
-    this.pastCourses = this.user.courses.past;
-    this.currentCourses = this.user.courses.current;
-    this.futureCourses = this.user.courses.future;
+    this.postService.getPostsByUser(this.user.uid).valueChanges()
+      .subscribe(posts => {
+        this.posts = posts;
+      })
+
+    this.userService.getUserCourses(this.user.uid).valueChanges()
+      .subscribe(userCourses => this.initializeUserCourses(userCourses));
   }
 
-  getUserString(): string {
-     if (!this.user) {
-        return;
-     } else if (this.user.name['first'] && this.user.name['last']) {
-        return this.user.name['first'] + ' ' + this.user.name['last'];
-    } else {
-        return this.user.username;
-    }
+  initializeUserCourses(userCourses: UserCourse[]): void {
+    this.pastCourses = userCourses.filter(userCourse => userCourse.plannerStatus === 'past').map(userCourse => userCourse.course);
+    this.currentCourses = userCourses.filter(userCourse => userCourse.plannerStatus === 'current').map(userCourse => userCourse.course);
+    this.futureCourses = userCourses.filter(userCourse => userCourse.plannerStatus === 'future').map(userCourse => userCourse.course);
+  }
+
+  toggleProfileVisibility() {
+    this.userService.updateUser(this.authService.uid, {isPrivate: !this.user.isPrivate});
   }
 
   logout() {
-    console.log('logging out');
     this.authService.signOut();
     this.router.navigate(['/community']);
   }
