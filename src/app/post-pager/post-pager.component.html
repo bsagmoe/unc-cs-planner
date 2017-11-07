@@ -2,25 +2,25 @@
   <div class="btn-group pager-btn-group" role="group" style="width: 100%">
 
     <button class="btn btn-default btn-icon"  [disabled]="index === 0" (click)="changeIndex(0)">
-      <md-icon>first_page</md-icon>
+      <mat-icon>first_page</mat-icon>
     </button>
    
     <button class="btn btn-default btn-icon" [disabled]="index === 0" (click)="changeIndex(index - 1)">
-      <md-icon >chevron_left</md-icon>
+      <mat-icon >chevron_left</mat-icon>
     </button>
     
     <button class="btn btn-default pager-btn-position"> {{ index + 1 }}/{{ posts.length }} </button>
     
     <button class="btn btn-default btn-icon" [disabled]="index === posts.length - 1" (click)="changeIndex(index + 1)">
-      <md-icon>chevron_right</md-icon>
+      <mat-icon>chevron_right</mat-icon>
     </button>
 
     <button class="btn btn-default btn-icon" [disabled]="index === posts.length - 1" (click)="changeIndex(posts.length - 1)">
-      <md-icon>last_page</md-icon>
+      <mat-icon>last_page</mat-icon>
     </button>
   </div>
   <app-post [post]="posts[index]"></app-post>
 </div>
 <div *ngIf="posts?.length === 0">
-  <p>No posts were be found</p>
+  <p>No posts were found</p>
 </div>
