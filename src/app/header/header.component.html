@@ -1,10 +1,10 @@
 <header>
     <h1>UNC CS Planner</h1>
-    <nav md-tab-nav-bar>
-        <a class="nav-tab" md-tab-link routerLink='/community' routerLinkActive #community="routerLinkActive" [active]="community.isActive">Community</a>
-        <a class="nav-tab" md-tab-link routerLink='/roadmap' routerLinkActive #roadmap="routerLinkActive" [active]="roadmap.isActive">Roadmap</a>
-        <a class="nav-tab" md-tab-link routerLink='/login' routerLinkActive #login="routerLinkActive" [active]="login.isActive" *ngIf='!authService.authenticated'>Login</a>
-        <a class="nav-tab" md-tab-link routerLink='/profile' routerLinkActive #profile="routerLinkActive" [active]="profile.isActive" *ngIf='authService.authenticated'>Profile</a>
-        <a class="nav-tab" md-tab-link routerLink='/info' routerLinkActive #info="routerLinkActive" [active]="info.isActive">Info</a>
+    <nav mat-tab-nav-bar>
+        <a class="nav-tab" mat-tab-link routerLink='/community' routerLinkActive #community="routerLinkActive" [active]="community.isActive">Community</a>
+        <a class="nav-tab" mat-tab-link routerLink='/roadmap' routerLinkActive #roadmap="routerLinkActive" [active]="roadmap.isActive">Roadmap</a>
+        <a class="nav-tab" mat-tab-link routerLink='/login' routerLinkActive #login="routerLinkActive" [active]="login.isActive" *ngIf='!authService.authenticated'>Login</a>
+        <a class="nav-tab" mat-tab-link routerLink='/profile' routerLinkActive #profile="routerLinkActive" [active]="profile.isActive" *ngIf='authService.authenticated'>Profile</a>
+        <a class="nav-tab" mat-tab-link routerLink='/info' routerLinkActive #info="routerLinkActive" [active]="info.isActive">Info</a>
     </nav>
 </header>

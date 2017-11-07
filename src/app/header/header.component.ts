@@ -12,6 +12,6 @@ export class HeaderComponent {
 
     links: string[];
 
-    constructor(private authService: AuthService) {}
+    constructor(public authService: AuthService) {}
 
 }
