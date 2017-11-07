@@ -3,36 +3,54 @@
    <!-- Post meta-info -->
   <div class="post-info">
     <div class="post-info-user">
-      <a *ngIf="post.user" [routerLink]="['/profile', post.user.username ]"> {{ getUserString() }}</a>
-      <span *ngIf="!post.user">[deleted]</span>
+      <a [routerLink]="['/profile', post.uid ]"> {{ post.displayName }}</a>
     </div>
     <div class="post-info-date">
       {{ post?.date | date }} at {{ post?.date | date:'shortTime' }}
+    </div>
+    <div class="post-info-edited" *ngIf="post.edited">
+      Edited on {{ post?.editDate | date }} at {{ post?.editDate | date:'shortTime' }}
     </div>
   </div>
 
 
   <!-- The post's body and tags -->
   <div class="post-text">
-    <p>{{ post.text }}</p>
-    <div *ngIf="post.tags.length > 0">
-      <span class="tag-chip" *ngFor="let tag of post.tags">{{ tag }}</span>
+    
+    <div [hidden]="editingPost">
+      <div [innerHTML]="post.text | paragraphs"></div>
+      <span class="post-interaction" *ngIf="authService.uid === post.uid && !editingPost" (click)="editingPost = true">Edit</span>
+      <div class="post-tags" *ngIf="post.tags?.length > 0">
+        <span class="tag-chip" *ngFor="let tag of post.tags">{{ tag }}</span>
+      </div>
     </div>
+
+    <form *ngIf="editingPost" class="post-reply">
+        <textarea rows="5" required class="form-control" [(ngModel)]="editText" name="editText"></textarea>
+        <input class="form-control" placeholder="Tags" type="text" [(ngModel)]="editTags" name="editTags">
+        <button class="btn btn-default" (click)="saveEdit()">Save</button>
+        <button class="btn btn-default" (click)="editingPost = false">Cancel</button>
+    </form>
+
   </div>
 
   <!-- Comment section -->
   <div *ngIf="post.comments?.length > 0" class="post-comments">
-    <app-comment *ngFor="let comment of post.comments" [comment]="comment" [level]="0"></app-comment>
+    <app-comment *ngFor="let comment of post.comments" [comment]="comment" [level]="0" [parentPath]="'/posts/' + post.id"></app-comment>
   </div>
 
   <!-- Form for creating a comment if the user is logged in -->
   <div *ngIf="authService.authenticated" class="post-add-comment">
-    <form id="comment-form">
-      <md-input-container>
-        <textarea mdInput required [(ngModel)]="text" name="text" placeholder="Comment"></textarea>
-      </md-input-container>        
-      <button (click)="submitComment()" md-button color="primary">Submit</button>
-    </form>
+    <div *ngIf="authService.user.emailVerified">
+      <form id="comment-form">
+        <textarea required class="form-control" [(ngModel)]="replyText" name="repyText" placeholder="Comment"></textarea>
+        <button class="btn btn-default" (click)="submitComment()" color="primary">Submit</button>
+      </form>
+    </div>
+    <div *ngIf="!authService.user.emailVerified">
+      <p>To make a reply, you must first verify your email.</p>
+      <button class="btn btn-default" (click)="sendVerificationEmail()">Resend</button> {{ verificationStatus }}
+    </div>
   </div>
   
 </div>

@@ -4,8 +4,9 @@ import { User } from '../user'
 import { Post } from '../post'
 import { Comment } from '../comment'
 
-import { PostService } from '../services/post.service'
+import { UserService } from '../services/user.service'
 import { CommentService } from '../services/comment.service'
+import { PostService } from '../services/post.service'
 import { AuthService } from '../services/auth.service'
 
 @Component({
@@ -15,42 +16,74 @@ import { AuthService } from '../services/auth.service'
   providers: [ CommentService ]
 })
 
-export class PostComponent {
+export class PostComponent implements OnInit {
 
-  @Input()
-  post: Post;
+  private _post: Post;
 
-  user: User;
-  userString: string;
-  text: string;
+  // When used in the post-pager component, we need to recalculate which comments exist, etc. when the post changes
+  @Input() set post(post: Post){
+    this._post = post;
+    this.initPost();
+  }
+
+  get post(): Post {
+    return this._post;
+  }
+
+  replyText: string;
+  editText: string;
+  editTags: string;
+
+  editingPost: boolean;
+
+  verificationStatus: string;
 
   constructor(private commentService: CommentService,
               private postService: PostService,
-              private authService: AuthService) { }
+              private userService: UserService,
+              public authService: AuthService) { }
 
-  getUserString(): string {
-     if (!this.post.user) {
-        return;
-     } else if (this.post.user.name['first'] && this.post.user.name['last']) {
-        return this.post.user.name['first'] + ' ' + this.post.user.name['last'];
-    } else {
-        return this.post.user.username;
-    }
+  ngOnInit() {
+    this.initPost();
+  }
+
+  initPost() {
+    this.editingPost = false;
+    this.editText = this.post.text;
+    this.editTags = this.post.tags ? this.post.tags.join(', ') : '';
+
+    // Load and display all of the subcomments
+    this.commentService.getPostComments(this.post.id).valueChanges().subscribe(comments => {
+      this.post.comments = comments.sort( (a, b) => {
+        return Object.keys(a.likes).length - Object.keys(b.likes).length
+      }).reverse();
+    })
   }
 
   submitComment() {
-    let comment;
-    if (this.text && this.text.trim()) {
-      this.commentService.createComment(this.text, this.post._id).then(
-        res => {
-          this.text = '';   // reset the comment box to be empty
-          comment = res as Comment;
-          this.post.comments.push(comment);                             // link the comment to the post locally
-          this.postService.addCommentToPost(this.post._id, comment._id) // link the comment to the post globally
-                .then().catch(err => {console.log(err)});
-        }
-      ).catch(err => {console.log(err)});
+    if (this.authService.authenticated && this.replyText && this.replyText.trim()) {
+      this.commentService.createComment(this.replyText, `/posts/${this.post.id}`, this.authService.uid, this.authService.user.displayName)
+        .then( _ => this.replyText = '')
+        .catch(err => alert('You may need to log back in for e-mail verification to sync up'));
     }
   }
 
+  saveEdit() {
+    this.editingPost = false;
+
+    // make sure that only the user who created it can edit it
+    // also, that the post has changed in some way
+    if (this.authService.authenticated &&
+        this.authService.uid === this.post.uid &&
+        ((this.editText && this.editText.trim() && this.editText !== this.post.text) ||
+         (this.editTags !== this.post.tags.join(', ') )) ) {
+      this.postService.editPost(this.editText, this.editTags, this.post.id);
+    }
+  }
+
+  sendVerificationEmail() {
+    this.authService.user.sendEmailVerification()
+      .then(result => this.verificationStatus = 'Sent.')
+      .catch(result => this.verificationStatus = 'Could not send.')
+  }
 }

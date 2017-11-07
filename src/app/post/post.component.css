@@ -17,9 +17,19 @@
     font-size: 1.5em;
 }
 
+.post-info-edited {
+    font-size: .5em;
+    opacity: .5;
+}
+
 .post-text {
     margin: 2em;
     font-size: 1.1em;
+    word-wrap: break-word;
+}
+
+.post-tags {
+    margin-top: 1em;
 }
 
 .tag-chip {
@@ -37,21 +47,30 @@
     padding: 1em 2em;
 }
 
-#comment-form {
-    display: flex;
-}
-
-md-input-container {
-    flex-grow: 1;
+#comment-form > button {
+    margin-top: 1em;
 }
 
 form textarea {
     resize: vertical;
 }
 
-
 .post-comments {
     border-top: thin solid #5C839E;
     background-color: #eff5fa;
     padding: 1em; 
+}
+
+.post-interaction {
+    font-size: .75em;
+    text-transform: lowercase;
+}
+
+.post-interaction:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.post-reply > button, .post-reply > textarea, .post-reply > input {
+    margin: .5em auto;
 }
