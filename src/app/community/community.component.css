@@ -16,16 +16,16 @@ form {
     margin: 1em auto;
 }
 
-md-input-container {
-    width: 100%;
-}
-
 button:focus, button:active {
     outline: none;
 }
 
 textarea {
     resize: vertical;
+}
+
+.form-post-text, .form-post-tags {
+    margin-bottom: 1em;
 }
 
 .post-container {

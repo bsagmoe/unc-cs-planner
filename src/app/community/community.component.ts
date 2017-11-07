@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { PostService } from '../services/post.service'
-import { AuthService } from '../services/auth.service'
-import { Post } from '../post'
-import { PostModel } from '../form-models/post.model'
+import { PostService } from '../services/post.service';
+import { AuthService } from '../services/auth.service';
+
+import { MatDialog } from '@angular/material';
+import { VerifyEmailDialogComponent } from '../dialogs/verify-email.component'
+
+import { Post } from '../post';
+import { User } from '../user';
+import { PostModel } from '../form-models/post.model';
 
 @Component({
   selector: 'app-community',
@@ -13,48 +18,62 @@ import { PostModel } from '../form-models/post.model'
 export class CommunityComponent implements OnInit {
 
   posts: Post[];
-
-  filterTags: string;
-
+  filterTag: string;
   makingPost: boolean;
-
   model: PostModel = new PostModel('', '');
 
-  constructor(private postService: PostService,
-              private authService: AuthService) { }
+  constructor(public verifyDialog: MatDialog,
+              private postService: PostService,
+              public authService: AuthService) { }
 
   ngOnInit() {
-    this.postService.getPosts().then(posts => this.posts = posts).catch();
+    this.postService.getPosts().valueChanges().subscribe(posts => {
+      this.posts = posts;
+    });
     this.makingPost = false;
-    this.filterTags = ''
+    this.filterTag = ''
   }
 
   toggleMakingPost(): void {
-    this.makingPost = !this.makingPost;
+    if (this.authService.user.emailVerified === false) {
+          const dialogRef = this.verifyDialog.open(VerifyEmailDialogComponent);
+
+          dialogRef.afterClosed().subscribe(result => {
+            console.log(result);
+            if (result === true) {
+              this.authService.afAuth.auth.currentUser.sendEmailVerification().then(function() {
+                console.log('verification email sent')
+                return Promise.resolve();
+              }).catch(function(error) {
+                return Promise.reject({ message: 'Verification e-mail could not be sent. Try again later' });
+              });
+            }
+          })
+    } else {
+      this.makingPost = !this.makingPost;
+    }
   }
 
   submitPost() {
-    let tags: string[];
-    if (this.model.tags) {
-      tags = this.model.tags.split(',').map(tag => tag.trim());
-    } else {
-      tags = [];
-    }
-
-    this.postService.createPost(this.model.text, tags)
-      .then(res => {
-        const post = res as Post;
-        this.posts.unshift(post);
-      }).catch();
+    const numPosts = this.posts.length;
+    this.postService.createPost(this.model.text, this.model.tags, this.authService.uid, this.authService.user.displayName)
+      .then( _ => {
+        this.model.text = '';
+        this.model.tags = '';
+      })
+      .catch(err => alert('You may need to log back in for e-mail verification to sync up'));
     this.toggleMakingPost();
   }
 
   filterPosts() {
-    if (this.filterTags) {
-      this.postService.getPostsWithTags(this.filterTags.split(',').map(tag => tag.trim()))
-        .then(posts => this.posts = posts).catch();
+    if (this.filterTag) {
+      this.postService.getPostsWithTag(this.filterTag).valueChanges().subscribe(posts => {
+        this.posts = posts;
+      })
     } else {
-      this.postService.getPosts().then(posts => this.posts = posts).catch();
+      this.postService.getPosts().valueChanges().subscribe(posts => {
+        this.posts = posts;
+      });
     }
   }
 

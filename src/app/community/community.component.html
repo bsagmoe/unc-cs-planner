@@ -7,12 +7,12 @@
   <div class="row options-row">
     <div class="col-xs-12 options-col">
       <div class="input-group col-xs-8 col-sm-4" id="tag-search-group">
-        <input class="form-control" id="tag-filter" [(ngModel)]="filterTags" type="text" placeholder="COMP 401, COMP 410, ...">
+        <input class="form-control" id="tag-filter" [(ngModel)]="filterTag" type="text" placeholder="Tag">
         <span class="input-group-btn">
-          <button class="btn btn-default" type="button" (click)="filterPosts()">Search by tags</button>
+          <button class="btn btn-default" type="button" (click)="filterPosts()">Search by tag</button>
         </span>
       </div>
-      <button id="post-button" class="btn btn-default col-xs-4 col-sm-2" [disabled]="!authService.authenticated" (click)="makingPost = !makingPost">Make a post</button>
+      <button id="post-button" class="btn btn-default col-xs-4 col-sm-2" [disabled]="!authService.authenticated" (click)="toggleMakingPost()">Make a post</button>
     </div>
   </div>
  
@@ -20,23 +20,19 @@
   <div class="row">
     <div class="col-xs-12 col-sm-6 post-form" *ngIf="authService.authenticated" [hidden]="!makingPost" >
       <form #postForm="ngForm">
-        <md-input-container>
-          <textarea class="form-post-text" [(ngModel)]="model.text" name="text" mdInput mdTextareaAutosize required placeholder="Text"></textarea>
-        </md-input-container>
-
-        <md-input-container>
-          <input class="form-post-tags" [(ngModel)]="model.tags" name="tags" mdInput type="text" placeholder="Tags">
-        </md-input-container>
+        <textarea class="form-post-text form-control" [(ngModel)]="model.text" name="text" required placeholder="Post text"></textarea>
+        <input class="form-post-tags form-control" [(ngModel)]="model.tags" name="tags" mdInput type="text" placeholder="Tags">
         <button class="btn btn-default" (click)="submitPost()" [disabled]="!postForm.form.valid">Submit Post</button>
       </form>
     </div>
 
 
-
     <!-- The posts -->
-    <md-grid-list cols="2">
-      <app-post class="col-xs-12 col-sm-6" *ngFor="let post of posts" [post]="post"></app-post>
-    </md-grid-list>
+    <mat-grid-list cols="2">
+      <mat-grid-tile *ngFor="let post of posts">
+        <app-post class="col-xs-12 col-sm-6"  [post]="post"></app-post>
+      </mat-grid-tile>
+    </mat-grid-list>
 
     <div *ngIf="posts?.length === 0" class="text-center">
       <span class="h2">No posts were found!</span>
