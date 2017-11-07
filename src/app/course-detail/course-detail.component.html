@@ -5,8 +5,13 @@
   </div>
 
   <div class="row">
+    <div class="col-md-6 col-sm-12 col-xs-12">
+      <h3>From the Community</h3>
+      <app-post-pager [posts]="posts"></app-post-pager>
+    </div>
+
     <div class="col-md-6 col-xs-12">
-      <div *ngIf="userContextService.getCurrentUser()">
+      <div *ngIf="authService.authenticated">
         <h3>Add to planner</h3>
         <div class="btn-group" role="group">
           <button [class.active]="isPastCourse" class="btn btn-default" (click)="updatePlanner('past', isPastCourse)">Past</button>
@@ -26,11 +31,6 @@
           Instructor: {{ offering?.instructor }}
         </p>
       </div>
-    </div>
-
-    <div class="col-md-6 col-sm-12 col-xs-12">
-      <h3>From the Community</h3>
-      <app-post-pager [posts]="posts"></app-post-pager>
     </div>
   </div>
 </div>
