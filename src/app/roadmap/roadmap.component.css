@@ -20,8 +20,12 @@ app-course-card:focus {
 }
 
 #options-bar {
-    margin-top: 15px;
+    margin-top: 10px;
     margin-bottom: 30px;
+}
+
+#options-bar button {
+    margin-top: 10px;
 }
 
 .additional-info {

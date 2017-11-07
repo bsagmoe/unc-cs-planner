@@ -50,11 +50,11 @@
   </div>
 
   <div class="row">
-    <h2>Core Requirements</h2>
+    <h2>Required CS Courses</h2>
   </div>
   <div class="row course-row">
     <app-course-card class="col-md-3 col-xs-4"  *ngFor="let course of filteredCore"
-                     [routerLink]="['/courses', course.dept, course.number]" [course]="course"></app-course-card>
+                     [routerLink]="['/courses', course.dept, course.number]" [course]="course" [authenticated]="authService.authenticated"></app-course-card>
   </div>
 
   <div class="row" [ngSwitch]="coursePlan">
@@ -66,19 +66,19 @@
 
   <div class="row course-row">
     <app-course-card class="col-md-3 col-xs-4"  *ngFor="let course of filteredComp"
-                     [routerLink]="['/courses', course.dept, course.number]" [course]="course"></app-course-card>
+                     [routerLink]="['/courses', course.dept, course.number]" [course]="course" [authenticated]="authService.authenticated"></app-course-card>
   </div>
 
   <div *ngIf="coursePlan !== 'minor'">
     <div class="row" [ngSwitch]="coursePlan">
       <h2>Other Courses</h2>
       <p class="additional-info" *ngSwitchCase="'ba'">COMP 283 OR MATH 381, STOR 155 OR 435</p>
-      <p class="additional-info" *ngSwitchCase="'bs'">COMP 283 OR MATH 381 and an additional science course (see <a href='https://advising.unc.edu/files/2012/11/CompSciBS-2013-2016.pdf'>major worksheet</a> for more details)</p>
+      <p class="additional-info" *ngSwitchCase="'bs'">COMP 283 OR MATH 381, STOR 435, MATH 547, PHYS 118,  and an additional science course (see <a href='https://advising.unc.edu/files/2012/11/CompSciBS-2013-2017.pdf'>major worksheet</a> for more details)</p>
     </div>
 
     <div class="row course-row">
     <app-course-card class="col-md-3 col-xs-4"  *ngFor="let course of filteredOutside"
-                     [routerLink]="['/courses', course.dept, course.number]" [course]="course"></app-course-card>
+                     [routerLink]="['/courses', course.dept, course.number]" [course]="course" [authenticated]="authService.authenticated"></app-course-card>
     </div>
   </div>
 </div>
